@@ -2,7 +2,7 @@ body,html{
 	height: 100%;
 	margin: 0;
 	/* background: rgb(44, 47, 59); */
-	background-image: url("https://raw.githubusercontent.com/Azazel0203/Medical_ChatBot/main/static/hospital.jpg");
+	background-image: url("https://raw.githubusercontent.com/Azazel0203/Medical_ChatBot/main/static/hospital.png");
    /* background: -webkit-linear-gradient(to right, rgb(40, 59, 34), rgb(54, 60, 70), rgb(32, 32, 43)); */
 	/* background: linear-gradient(to right, rgb(38, 51, 61), rgb(50, 55, 65), rgb(33, 33, 78)); */
 }
