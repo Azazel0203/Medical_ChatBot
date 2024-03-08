@@ -1,10 +1,13 @@
 prompt_template="""
-use the following pieces of information to answer the user's question.
-If you dont know the answer, just say that you don't know, dont't try to make up an answer.
+Use the following pieces of information and the chat history (delimited by <hs></hs>) to answer the user's question.
+If you don't know the answer, simply state that you don't know; avoid making up an answer.
 
 Question: {question}
 Information: {context}
 
-Only return the helpfu asnwer below and nothing else.
+<hs>
+{history}
+</hs>
+
 Helpful Answer:
 """

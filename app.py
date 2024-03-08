@@ -4,25 +4,22 @@ from langchain_community.vectorstores import Pinecone
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import CTransformers
+from langchain.memory import ConversationBufferWindowMemory
 from langchain_pinecone import PineconeVectorStore
 import pinecone
 from dotenv import load_dotenv
 from src.prompt import *
+from src.helper import pinecone_init, get_embeddings, load_vectorstore
 import os
 load_dotenv()
-
+memory = ConversationBufferWindowMemory(k=3)
 app = Flask(__name__)
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_ENV = os.getenv("PINECONE_ENV")
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
-embeddings = download_hugging_face_embeddings()
-pc = pinecone.Pinecone(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-index = pc.Index(PINECONE_INDEX_NAME)
-print (index.describe_index_stats())
 
-vectorstore = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
-PROMPT = PromptTemplate(template=prompt_template, input_variables=["question", "context"])
-chain_type_kwargs={"prompt": PROMPT}
+index = pinecone_init()
+embeddings = get_embeddings()
+vectorstore, PROMPT = load_vectorstore(prompt_template=prompt_template, embeddings=embeddings)
+chain_type_kwargs={"prompt": PROMPT, "memory":ConversationBufferWindowMemory(memory_key="history", input_key="question")}
+
 llm = CTransformers(model="E:\ML\generative_ai\Medical_ChatBot\model\llama-2-7b-chat.ggmlv3.q4_0.bin",
                     model_type="llama",
                     config={'max_new_tokens': 512,
@@ -32,8 +29,9 @@ question_answer_chain = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
     retriever=vectorstore.as_retriever(search_kwargs={'k': 2}),
-    return_source_documents=True,
-    chain_type_kwargs=chain_type_kwargs
+    chain_type_kwargs=chain_type_kwargs,
+    memory=memory,
+    verbose=True
 )
 
 
@@ -46,15 +44,17 @@ def index():
 
 @app.route("/get", methods=["GET", "POST"])
 def chat():
+    print("MEMORY->")
+    print (memory)
     try:
         msg = request.form["msg"]
     except KeyError:
         return "Error: 'msg' field not found in the request form."
     input=msg
     print(input)
-    result = question_answer_chain({"query":input})
-    print ("Response: ", result["result"])
-    return str(result["result"])
+    result = question_answer_chain.invoke({"query":input})
+    print ("Response: ", result['result'])
+    return str(result['result'])
 
 if __name__ =='__main__':
     app.run(debug=True)

@@ -1,10 +1,15 @@
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_pinecone import PineconeVectorStore
+from pinecone.data.index import Index
+from langchain.prompts import PromptTemplate
+
+from tqdm import tqdm
 import pinecone
 import os
 from dotenv import load_dotenv
-load_dotenv()
+
 
 
 def load_pdfs(data: str) -> list:
@@ -51,16 +56,82 @@ def  download_hugging_face_embeddings(model_name: str = "sentence-transformers/a
     """
     return HuggingFaceEmbeddings(model_name=model_name)
 
-# def pinecone_init():
-#     pinecone_key = os.getenv("PINECONE_API_KEY")
-#     pinecone_env = os.getenv("PINECONE_ENV")
-#     pinecone_index = os.getenv("PINECONE_INDEX_NAME")
-#     pc = pinecone.Pinecone(api_key=pinecone_key, environment=pinecone_env)
-#     index=pc.Index(pinecone_index)
-#     print("Stats of the Vector Database: ->")
-#     print("================================================")
-#     print(index.describe_index_stats())
+def pinecone_init():
+    """
+    The function `pinecone_init` initializes a connection to a Pinecone Database using environment
+    variables for API key, environment, and index name.
+    :return: The function `pinecone_init()` is returning the Pinecone index object after setting up the
+    connection to the Pinecone Database and retrieving the current state of the Vector Database.
+    """
+    PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME = get_secrets()
+    try:
+        print("Setting up the connection to Pinecone Database...")
+        pc = pinecone.Pinecone(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
+    except Exception as e:
+        print(f"Error setting up the connection to Pinecone Database: {e}")
+        exit()
+    index=pc.Index(PINECONE_INDEX_NAME)
+    print("Current State of the Vector Database: ->")
+    print(index.describe_index_stats())
+    return index
     
 
-# def push_data_on_pinecone(text_chunks: list, embeddings: HuggingFaceEmbeddings, ):
+def store_data(text_chunks:list, embeddings:HuggingFaceEmbeddings, index:Index, batch_size:int = 300) -> bool:
+    PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME = get_secrets()
+    print("Storing the data on the Pinecone Vector DataBase")
+    total_documents = len(text_chunks)
+    with tqdm(total=total_documents, desc="Storing documents") as pbar:
+                for i in range(0, total_documents, batch_size):
+                    batch = text_chunks[i:i+batch_size]
+                try:
+                    PineconeVectorStore.from_documents(batch, embeddings, index_name=PINECONE_INDEX_NAME)
+                    pbar.update(len(batch))
+                except Exception as e:
+                    print(f"Error storing documents: {e}")
+                    return False
+    print("Finished Uploading the data on the Pinecone Vector DataBase.")
+    print ("State of DataBase After Storing: -> ")
+    print (index.describe_index_stats())
+    return True
+
+
+def get_chunks_from_pdf(path: str) -> list:
+    try:
+        print("Extracting data...")
+        extracted_data = load_pdfs(data="data")
+    except Exception as e:
+        print(f"Error during loading the data: {e}")
+        exit()
+    print("Creating text chunks...")
+    text_chunks = text_split(extracted_data=extracted_data)
+    return text_chunks
+
+
+def get_embeddings(emb_model:str=None) -> HuggingFaceEmbeddings:
+    try:
+        print("Getting the embedding model...")
+        if emb_model is None:
+            embeddings = download_hugging_face_embeddings()
+        else:
+            embeddings = download_hugging_face_embeddings(emb_model)
+    except Exception as e:
+        print(f"Error during fetching the embedding model: {e}")
+        exit()
+    return embeddings
+
+def get_secrets() -> tuple:
+    load_dotenv()
+    PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+    PINECONE_ENV = os.getenv("PINECONE_ENV")
+    PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+    return PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME
+
+
+def load_vectorstore(prompt_template:str, embeddings: HuggingFaceEmbeddings) -> tuple:
+    PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME = get_secrets()
+    vectorstore = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
+    PROMPT = PromptTemplate(template=prompt_template, input_variables=["question", "context", "history"])
+    return vectorstore, PROMPT
+
+
     
