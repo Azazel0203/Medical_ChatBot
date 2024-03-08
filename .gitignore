@@ -166,8 +166,6 @@ medical_chatbot
 model
 experiment
 
-.env
-
 template.py
 Medical_ChatBot.egg.info
 .gitignore
