@@ -3,7 +3,7 @@ from src.helper import download_hugging_face_embeddings
 from langchain_community.vectorstores import Pinecone
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-from langchain.llms import CTransformers
+from langchain_community.llms import CTransformers
 from langchain_pinecone import PineconeVectorStore
 import pinecone
 from dotenv import load_dotenv
