@@ -163,9 +163,8 @@ cython_debug/
 data
 medical_chatbot
 
-model
 experiment
-
+model
 template.py
 Medical_ChatBot.egg.info
-.gitignore
+setup.py
