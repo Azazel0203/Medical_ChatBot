@@ -1,9 +1,10 @@
 body,html{
 	height: 100%;
 	margin: 0;
-	background: rgb(44, 47, 59);
-   background: -webkit-linear-gradient(to right, rgb(40, 59, 34), rgb(54, 60, 70), rgb(32, 32, 43));
-	background: linear-gradient(to right, rgb(38, 51, 61), rgb(50, 55, 65), rgb(33, 33, 78));
+	/* background: rgb(44, 47, 59); */
+	background-image: url("https://raw.githubusercontent.com/Azazel0203/Medical_ChatBot/main/static/Nurse.png");
+   /* background: -webkit-linear-gradient(to right, rgb(40, 59, 34), rgb(54, 60, 70), rgb(32, 32, 43)); */
+	/* background: linear-gradient(to right, rgb(38, 51, 61), rgb(50, 55, 65), rgb(33, 33, 78)); */
 }
 
 .chat{
@@ -13,7 +14,7 @@ body,html{
 .card{
 	height: 500px;
 	border-radius: 15px !important;
-	background-color: rgba(0,0,0,0.4) !important;
+	background-color: rgba(0,0,0,0.6) !important;
 }
 .contacts_body{
 	padding:  0.75rem 0 !important;
@@ -36,7 +37,7 @@ border-radius: 0 0 15px 15px !important;
 }
 .search{
 	border-radius: 15px 0 0 15px !important;
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(0,0,0,0.7) !important;
 	border:0 !important;
 	color:white !important;
 }
@@ -45,7 +46,7 @@ border-radius: 0 0 15px 15px !important;
    outline:0px !important;
 }
 .type_msg{
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(0,0,0,0.7) !important;
 	border:0 !important;
 	color:white !important;
 	height: 60px !important;
@@ -57,21 +58,21 @@ border-radius: 0 0 15px 15px !important;
 }
 .attach_btn{
 	border-radius: 15px 0 0 15px !important;
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(0,0,0,0.6) !important;
 	border:0 !important;
 	color: white !important;
 	cursor: pointer;
 }
 .send_btn{
 	border-radius: 0 15px 15px 0 !important;
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(0,0,0,0.6) !important;
 	border:0 !important;
 	color: white !important;
 	cursor: pointer;
 }
 .search_btn{
 	border-radius: 0 15px 15px 0 !important;
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(0,0,0,0.6) !important;
 	border:0 !important;
 	color: white !important;
 	cursor: pointer;
@@ -86,7 +87,7 @@ border-radius: 0 0 15px 15px !important;
 	margin-bottom: 15px !important;
 }
 .active{
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,0.6);
 }
 .user_img{
 	height: 70px;
