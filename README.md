@@ -110,7 +110,6 @@ def chatbot_loop():
       print("Sorry, I couldn't find any information related to your question.")
 ```
 
-**Note:** This is a simplified representation of the chatbot loop. A full implementation would involve additional functionalities like handling different conversation flows, managing user context, and potentially integrating voice recognition for a more interactive experience.
 
 ###  Benefits
 
