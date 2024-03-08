@@ -2,6 +2,10 @@
 
 This project builds a medical chatbot that retrieves information from a medical PDF book and utilizes Langchain for processing and Pinecone for efficient information retrieval.
 
+
+![[Web Page of The Chat App]](https://raw.githubusercontent.com/Azazel0203/Medical_ChatBot/main/static/web_page.jpg)
+
+
 ###  Features
 
 * **Medical Knowledge Base:** Extracts and organizes medical information from a PDF book.
