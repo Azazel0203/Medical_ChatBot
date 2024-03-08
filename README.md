@@ -10,6 +10,9 @@ This project builds a medical chatbot that retrieves information from a medical 
 * **Llama2 Embeddings:** Employs the powerful Llama2 model from Hugging Face to generate contextual embeddings for both user queries and medical text snippets. This allows for semantic matching and retrieval of relevant information even when phrased differently.
 * **Pinecone Vector Database:** Stores the generated embeddings in a Pinecone vector database for efficient retrieval. This enables fast and scalable search of the medical knowledge base.
 * **Chatbot Interface:** Provides a user-friendly interface (text-based or potentially voice-based) for users to interact with the chatbot and ask medical questions.
+* **HTML and CSS Design:** The chat interface is designed using HTML and styled using CSS to provide an intuitive and visually appealing user experience.
+* **Flask Backend:** The application backend is built using Flask, a lightweight web framework for Python, to handle user requests and interact with the chatbot.
+* **Real-time Messaging:** Users can communicate with the chatbot in real-time, receiving instant responses to their queries.
 
 ###  Technical Stack
 
@@ -17,6 +20,7 @@ This project builds a medical chatbot that retrieves information from a medical 
 * **Hugging Face Transformers:** Provides access to pre-trained NLP models like Llama2 for generating contextual embeddings.
 * **Pinecone:** A vector database service enabling efficient storage and retrieval of high-dimensional data like embeddings.
 * **Additional Libraries:** Depending on the chosen interface (text-based or voice-based), additional libraries like NLTK or spaCy might be used for further text processing and chatbot functionalities.
+* **Flask:** A lightweight web framework for Python used to develop the chatbot's interface and handle user requests.
 
 ###  Workflow
 
@@ -160,18 +164,6 @@ To store vectors in the Pinecone Vector Database, execute the following command:
 ```bash
 python store_vectors.py
 ```
-
-## Components
-
-The LangChain Pinecone Vector Store project comprises the following key components:
-
-- **Document Loaders**: Module for loading PDF documents and preparing them for processing.
-- **Embeddings**: Module for fetching embeddings using pre-trained Hugging Face models.
-- **Prompts**: Module for creating prompt templates to guide language generation tasks.
-- **Text Splitter**: Module for splitting text into smaller chunks to facilitate processing.
-- **Pinecone Initialization**: Function to initialize a connection to the Pinecone Vector Database.
-- **Data Storage**: Function to store processed data in the Pinecone Vector Database.
-- **Utility Functions**: Functions for extracting text from PDFs, fetching embeddings, and managing environment variables.
 
 ## Contributing
 
