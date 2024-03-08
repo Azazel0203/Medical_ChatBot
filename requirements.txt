@@ -6,3 +6,5 @@ langchain==0.1.9
 flask
 pypdf
 langchain-pinecone==0.0.3
+
+-e .
