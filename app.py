@@ -44,5 +44,17 @@ def index():
     return render_template('chat.html')
 
 
+@app.route("/get", methods=["GET", "POST"])
+def chat():
+    try:
+        msg = request.form["msg"]
+    except KeyError:
+        return "Error: 'msg' field not found in the request form."
+    input=msg
+    print(input)
+    result = question_answer_chain({"query":input})
+    print ("Response: ", result["result"])
+    return str(result["result"])
+
 if __name__ =='__main__':
     app.run(debug=True)
