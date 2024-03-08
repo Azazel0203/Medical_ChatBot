@@ -125,3 +125,58 @@ def chatbot_loop():
 * **Chatbot Development:**  Developing a robust chatbot interface requires additional libraries like Rasa or Dialogflow for handling conversation flow and natural language understanding.
 
 This project showcases the potential of Langchain and Pinecone in creating a medical chatbot that offers an accessible and efficient way to access and understand medical information. Remember to adapt and expand upon this concept to fit the specific needs of your medical PDF book and desired functionalities.
+
+## Installation
+
+To set up the LangChain Pinecone Vector Store project, follow these steps:
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/<username>/<repository>.git
+    cd <repository>
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3. Configure environment variables:
+
+    Create a `.env` file in the root directory and specify the following variables:
+
+    ```plaintext
+    PINECONE_API_KEY=<your_pinecone_api_key>
+    PINECONE_ENV=<pinecone_environment>
+    PINECONE_INDEX_NAME=<pinecone_index_name>
+    ```
+
+## Usage
+
+To store vectors in the Pinecone Vector Database, execute the following command:
+
+```bash
+python store_vectors.py
+```
+
+## Components
+
+The LangChain Pinecone Vector Store project comprises the following key components:
+
+- **Document Loaders**: Module for loading PDF documents and preparing them for processing.
+- **Embeddings**: Module for fetching embeddings using pre-trained Hugging Face models.
+- **Prompts**: Module for creating prompt templates to guide language generation tasks.
+- **Text Splitter**: Module for splitting text into smaller chunks to facilitate processing.
+- **Pinecone Initialization**: Function to initialize a connection to the Pinecone Vector Database.
+- **Data Storage**: Function to store processed data in the Pinecone Vector Database.
+- **Utility Functions**: Functions for extracting text from PDFs, fetching embeddings, and managing environment variables.
+
+## Contributing
+
+Contributions to the LangChain Pinecone Vector Store project are encouraged and appreciated! If you have ideas for enhancements, bug fixes, or new features, please submit a pull request. Be sure to follow the contribution guidelines outlined in the repository.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE), which permits unrestricted use, distribution, and modification, subject to the terms and conditions specified in the license agreement.
