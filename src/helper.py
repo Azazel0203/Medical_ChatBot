@@ -81,14 +81,14 @@ def store_data(text_chunks:list, embeddings:HuggingFaceEmbeddings, index:Index, 
     print("Storing the data on the Pinecone Vector DataBase")
     total_documents = len(text_chunks)
     with tqdm(total=total_documents, desc="Storing documents") as pbar:
-                for i in range(0, total_documents, batch_size):
-                    batch = text_chunks[i:i+batch_size]
-                try:
-                    PineconeVectorStore.from_documents(batch, embeddings, index_name=PINECONE_INDEX_NAME)
-                    pbar.update(len(batch))
-                except Exception as e:
-                    print(f"Error storing documents: {e}")
-                    return False
+        for i in range(0, total_documents, batch_size):
+            batch = text_chunks[i:i+batch_size]
+            try:
+                PineconeVectorStore.from_documents(batch, embeddings, index_name=PINECONE_INDEX_NAME)
+                pbar.update(len(batch))
+            except Exception as e:
+                print(f"Error storing documents: {e}")
+                return False
     print("Finished Uploading the data on the Pinecone Vector DataBase.")
     print ("State of DataBase After Storing: -> ")
     print (index.describe_index_stats())

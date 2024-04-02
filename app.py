@@ -1,16 +1,10 @@
-from flask import Flask, render_template, jsonify, request
-from src.helper import download_hugging_face_embeddings
-from langchain_community.vectorstores import Pinecone
+from flask import Flask, render_template, request
 from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
 from langchain_community.llms import CTransformers
 from langchain.memory import ConversationBufferWindowMemory
-from langchain_pinecone import PineconeVectorStore
-import pinecone
 from dotenv import load_dotenv
 from src.prompt import *
 from src.helper import pinecone_init, get_embeddings, load_vectorstore
-import os
 load_dotenv()
 memory = ConversationBufferWindowMemory(k=3)
 app = Flask(__name__)
@@ -20,7 +14,7 @@ embeddings = get_embeddings()
 vectorstore, PROMPT = load_vectorstore(prompt_template=prompt_template, embeddings=embeddings)
 chain_type_kwargs={"prompt": PROMPT, "memory":ConversationBufferWindowMemory(memory_key="history", input_key="question")}
 
-llm = CTransformers(model="E:\ML\generative_ai\Medical_ChatBot\model\llama-2-7b-chat.ggmlv3.q4_0.bin",
+llm = CTransformers(model=".\model\llama-2-7b-chat.ggmlv3.q4_0.bin",
                     model_type="llama",
                     config={'max_new_tokens': 512,
                             'temperature': 0.9})
@@ -57,4 +51,4 @@ def chat():
     return str(result['result'])
 
 if __name__ =='__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8000)
