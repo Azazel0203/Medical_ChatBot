@@ -6,4 +6,11 @@ flask
 pypdf
 langchain-pinecone
 
+
+
+pytest
+tox
+flake8
+black
+
 -e .

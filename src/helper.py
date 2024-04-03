@@ -4,12 +4,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_pinecone import PineconeVectorStore
 from pinecone.data.index import Index
 from langchain.prompts import PromptTemplate
-
 from tqdm import tqdm
 import pinecone
 import os
 from dotenv import load_dotenv
-
 
 
 def load_pdfs(data: str) -> list:
@@ -24,6 +22,7 @@ def load_pdfs(data: str) -> list:
     """
     loader = DirectoryLoader(data, glob="*.pdf", loader_cls=PyPDFLoader)
     return loader.load()
+
 
 def text_split(extracted_data: list) -> list:
     """
@@ -42,7 +41,8 @@ def text_split(extracted_data: list) -> list:
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
     return text_splitter.split_documents(extracted_data)
 
-def  download_hugging_face_embeddings(model_name: str = "sentence-transformers/all-MiniLM-L6-v2") -> HuggingFaceEmbeddings:
+
+def download_hugging_face_embeddings(model_name: str = "sentence-transformers/all-MiniLM-L6-v2") -> HuggingFaceEmbeddings:
     """
     This Python function downloads Hugging Face embeddings using a specified model name.
     
@@ -55,6 +55,7 @@ def  download_hugging_face_embeddings(model_name: str = "sentence-transformers/a
     `model_name`.
     """
     return HuggingFaceEmbeddings(model_name=model_name)
+
 
 def pinecone_init():
     """
@@ -70,19 +71,19 @@ def pinecone_init():
     except Exception as e:
         print(f"Error setting up the connection to Pinecone Database: {e}")
         exit()
-    index=pc.Index(PINECONE_INDEX_NAME)
+    index = pc.Index(PINECONE_INDEX_NAME)
     print("Current State of the Vector Database: ->")
     print(index.describe_index_stats())
     return index
     
 
-def store_data(text_chunks:list, embeddings:HuggingFaceEmbeddings, index:Index, batch_size:int = 300) -> bool:
+def store_data(text_chunks: list, embeddings: HuggingFaceEmbeddings, index: Index, batch_size: int = 300) -> bool:
     PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME = get_secrets()
     print("Storing the data on the Pinecone Vector DataBase")
     total_documents = len(text_chunks)
     with tqdm(total=total_documents, desc="Storing documents") as pbar:
         for i in range(0, total_documents, batch_size):
-            batch = text_chunks[i:i+batch_size]
+            batch = text_chunks[i:i + batch_size]
             try:
                 PineconeVectorStore.from_documents(batch, embeddings, index_name=PINECONE_INDEX_NAME)
                 pbar.update(len(batch))
@@ -90,8 +91,8 @@ def store_data(text_chunks:list, embeddings:HuggingFaceEmbeddings, index:Index, 
                 print(f"Error storing documents: {e}")
                 return False
     print("Finished Uploading the data on the Pinecone Vector DataBase.")
-    print ("State of DataBase After Storing: -> ")
-    print (index.describe_index_stats())
+    print("State of DataBase After Storing: -> ")
+    print(index.describe_index_stats())
     return True
 
 
@@ -107,7 +108,7 @@ def get_chunks_from_pdf(path: str) -> list:
     return text_chunks
 
 
-def get_embeddings(emb_model:str=None) -> HuggingFaceEmbeddings:
+def get_embeddings(emb_model: str = None) -> HuggingFaceEmbeddings:
     try:
         print("Getting the embedding model...")
         if emb_model is None:
@@ -119,6 +120,7 @@ def get_embeddings(emb_model:str=None) -> HuggingFaceEmbeddings:
         exit()
     return embeddings
 
+
 def get_secrets() -> tuple:
     load_dotenv()
     PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
@@ -127,7 +129,7 @@ def get_secrets() -> tuple:
     return PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME
 
 
-def load_vectorstore(prompt_template:str, embeddings: HuggingFaceEmbeddings) -> tuple:
+def load_vectorstore(prompt_template: str, embeddings: HuggingFaceEmbeddings) -> tuple:
     PINECONE_API_KEY, PINECONE_ENV, PINECONE_INDEX_NAME = get_secrets()
     vectorstore = PineconeVectorStore(index_name=PINECONE_INDEX_NAME, embedding=embeddings)
     PROMPT = PromptTemplate(template=prompt_template, input_variables=["question", "context", "history"])
